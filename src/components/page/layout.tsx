@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import LocalStorage from '@/lib/utils/localStorage';
 import { getMyAccountApi } from '@/lib/apis/users';
+import Image from 'next/image';
 
 export default function MainLayout({
   children,
@@ -14,7 +15,7 @@ export default function MainLayout({
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [profileImage, setProfileImage] = useState(
-    '/public/assets/default-avatar.jpg',
+    '/assets/default-avatar.jpg',
   );
   const router = useRouter();
 
@@ -38,9 +39,7 @@ export default function MainLayout({
           console.error('Failed to fetch profile image:', error);
         }
       }
-      setProfileImage(
-        imageUrl ? imageUrl : '/public/assets/default-avatar.jpg',
-      );
+      setProfileImage(imageUrl ? imageUrl : '/assets/default-avatar.jpg');
     };
 
     fetchProfileImage();
@@ -113,9 +112,11 @@ export default function MainLayout({
               onClick={() => setProfileMenuOpen(!profileMenuOpen)}
             >
               {profileImage ? (
-                <img
+                <Image
                   src={profileImage}
                   alt="Profile"
+                  width={40}
+                  height={40}
                   className="w-10 h-10 rounded-full"
                 />
               ) : (

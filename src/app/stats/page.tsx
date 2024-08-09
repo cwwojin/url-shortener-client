@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CategoryScale } from 'chart.js';
@@ -20,10 +20,10 @@ const Statistics = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const shortUrl = searchParams.get('shorturl');
-  const urlId = searchParams.get('url');
 
   useEffect(() => {
+    const shortUrl = searchParams.get('shorturl');
+    const urlId = searchParams.get('url');
     if (!shortUrl || !urlId) {
       router.push('/mypage');
     }
@@ -37,9 +37,10 @@ const Statistics = () => {
   }, [router]);
 
   useEffect(() => {
+    const urlId = searchParams.get('url');
     const fetchData = async () => {
       try {
-        const data: GetUrlHistoryDto = { urlId };
+        const data: GetUrlHistoryDto = { urlId: parseInt(urlId ? urlId : '0') };
         const [urlHistory, clicks] = await getUrlHistoryApi(data);
 
         setClickData(urlHistory);
@@ -85,22 +86,24 @@ const Statistics = () => {
 
   return (
     <MainLayout>
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="max-w-4xl w-full bg-white p-8 rounded shadow-md">
-          <h2 className="text-gray-600 text-2xl font-bold mb-6 text-center">
-            URL Click Statistics
-          </h2>
-          <a
-            href={`${HOSTING_URL}/${shortUrl}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 text-sm mb-6 font-bold hover:underline"
-          >
-            {`${HOSTING_URL}/${shortUrl}`}
-          </a>
-          {loading ? <p>Loading...</p> : <Line data={chartData} />}
+      <Suspense>
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+          <div className="max-w-4xl w-full bg-white p-8 rounded shadow-md">
+            <h2 className="text-gray-600 text-2xl font-bold mb-6 text-center">
+              URL Click Statistics
+            </h2>
+            <a
+              href={`${HOSTING_URL}/${searchParams.get('shorturl')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 text-sm mb-6 font-bold hover:underline"
+            >
+              {`${HOSTING_URL}/${searchParams.get('shorturl')}`}
+            </a>
+            {loading ? <p>Loading...</p> : <Line data={chartData} />}
+          </div>
         </div>
-      </div>
+      </Suspense>
     </MainLayout>
   );
 };
