@@ -32,10 +32,8 @@ export interface GetUrlMetaResponse {
 
 /** Get URL click history */
 export interface GetUrlHistoryResponse {
-  data: {
-    pk: number;
-    clickedTime: Date;
-    createdAt: Date;
-    updatedAt: Date;
-  }[];
+  pk: number;
+  clickedTime: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

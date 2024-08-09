@@ -16,18 +16,17 @@ export interface SignUpResponse {
 
 /** Get account info */
 export interface GetMyAccountResponse {
-  data: {
-    id: string;
-    email: string;
-    username: string;
-    profileImageFile: string;
-  };
+  id: string;
+  email: string;
+  username: string;
+  profileImageFile: string;
 }
 
 /** Get My URLs */
 export interface GetMyUrlResponse {
-  data: {
-    pk: number;
-    lastClickedTime: Date;
-  }[];
+  pk: number;
+  shortUrl: string;
+  originalUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

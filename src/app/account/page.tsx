@@ -1,9 +1,20 @@
 'use client';
 
-import React from 'react';
 import MainLayout from '@/components/page/layout';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const AccountSettings = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const accessToken = Cookies.get('token');
+    if (!accessToken) {
+      router.push('/login');
+    }
+  }, [router]);
+
   return (
     <MainLayout>
       <h1 className="text-gray-600 text-2xl font-bold mb-4">

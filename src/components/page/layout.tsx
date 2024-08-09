@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import LocalStorage from '@/lib/utils/localStorage';
+import { getMyAccountApi } from '@/lib/apis/users';
 
 export default function MainLayout({
   children,
@@ -11,13 +13,38 @@ export default function MainLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const [profileImage, setProfileImage] = useState(
+    '/public/assets/default-avatar.jpg',
+  );
   const router = useRouter();
 
   const handleLogout = () => {
     Cookies.remove('token');
     Cookies.remove('refreshToken');
+    localStorage.removeItem('profileItem');
     router.push('/login');
   };
+
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      let imageUrl = localStorage.getItem('profileImage');
+
+      if (!imageUrl) {
+        try {
+          let { profileImageFile: imageUrl } = await getMyAccountApi();
+
+          localStorage.setItem('profileImage', imageUrl);
+        } catch (error) {
+          console.error('Failed to fetch profile image:', error);
+        }
+      }
+      setProfileImage(
+        imageUrl ? imageUrl : '/public/assets/default-avatar.jpg',
+      );
+    };
+
+    fetchProfileImage();
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -79,13 +106,21 @@ export default function MainLayout({
       {/* Main content */}
       <div className="flex-grow flex flex-col">
         {/* Top bar */}
-        <div className="p-4 flex justify-end">
+        <div className="bg-white shadow-md p-4 flex justify-end">
           <div className="relative">
             <button
               className="focus:outline-none"
               onClick={() => setProfileMenuOpen(!profileMenuOpen)}
             >
-              <div className="w-10 h-10 rounded-full bg-gray-300"></div>
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gray-300"></div>
+              )}
             </button>
             {profileMenuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md">
