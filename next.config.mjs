@@ -10,6 +10,11 @@ const nextConfig = {
         destination: '/create-url',
         permanent: true,
       },
+      {
+        source: '/api',
+        destination:
+          'http://url-shortener-alb-732016051.ap-northeast-2.elb.amazonaws.com',
+      },
     ];
   },
   images: {

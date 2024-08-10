@@ -5,8 +5,10 @@ import Cookies from 'js-cookie';
 //   ? 'http://url-shortener-alb-732016051.ap-northeast-2.elb.amazonaws.com'
 //   : 'http://localhost:3000';
 
-export const HOSTING_URL =
-  'http://url-shortener-alb-732016051.ap-northeast-2.elb.amazonaws.com';
+// export const HOSTING_URL =
+//   'http://url-shortener-alb-732016051.ap-northeast-2.elb.amazonaws.com';
+
+export const HOSTING_URL = '/api';
 
 export const getHeaders = () => {
   const accessToken = Cookies.get('token');
