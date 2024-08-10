@@ -3,6 +3,15 @@ const nextConfig = {
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
+  redirects: async () => {
+    return [
+      {
+        source: '/',
+        destination: '/create-url',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
